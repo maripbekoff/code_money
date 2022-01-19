@@ -1,0 +1,48 @@
+name: code_money
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+environment_config:
+  fields:
+    apiUrl:
+      short_name: a
+    apiKey:
+      short_name: k
+    spreadsheetId:
+      short_name: i
+
+dependencies:
+  flutter:
+    sdk: flutter
+    
+  cupertino_icons: ^1.0.2
+  google_sign_in: ^5.2.3
+  get_it: ^7.2.0
+  flutter_bloc: ^8.0.1
+  hive: ^2.0.5
+  hive_flutter: ^1.1.0
+  json_serializable: ^6.1.4
+  environment_config: ^3.0.0
+  dio: ^4.0.4
+  json_annotation: ^4.4.0
+  http: ^0.13.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.0
+  rename: ^2.0.1
+  build_runner: ^2.1.7
+
+
+
+flutter:
+
+  uses-material-design: true
