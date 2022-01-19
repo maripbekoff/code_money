@@ -4,17 +4,17 @@ part 'transaction_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TransactionModel {
-  final String month;
-  final int monthNum;
-  final int date;
+  final String? month;
+  final int? monthNum;
+  final String date;
   final int sum;
   final String wallet;
   final String direction;
   final String counterAgent;
   final String appointment;
   final String article;
-  final bool admission;
-  final String kindOfActivity;
+  final bool? admission;
+  final String? kindOfActivity;
 
   TransactionModel({
     required this.month,

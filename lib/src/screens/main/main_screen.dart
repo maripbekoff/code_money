@@ -22,6 +22,7 @@ class MainScreen extends StatelessWidget {
         ),
         tabBuilder: (context, index) {
           return SafeArea(
+            top: false,
             child: CupertinoTabView(
               onGenerateRoute: AppRouter.onGenerateRoute,
               builder: (context) {
@@ -36,7 +37,7 @@ class MainScreen extends StatelessWidget {
                   case 1:
                     return const ProfileScreen();
                   default:
-                    return const HomeScreen();
+                    return Container();
                 }
               },
             ),

@@ -1,5 +1,7 @@
 import 'package:code_money/src/common/dependencies/injection_container.dart';
 import 'package:code_money/src/router/routing_const.dart';
+import 'package:code_money/src/screens/add_transaction/add_transaction_screen.dart';
+import 'package:code_money/src/screens/add_transaction/cubit/add_transaction_cubit.dart';
 import 'package:code_money/src/screens/auth/auth_screen.dart';
 import 'package:code_money/src/screens/auth/cubit/log_in_cubit.dart';
 import 'package:code_money/src/screens/home/cubit/home_cubit.dart';
@@ -35,7 +37,14 @@ class AppRouter {
       case RoutingConst.profileRoute:
         return CupertinoPageRoute(builder: (context) => const ProfileScreen());
       case RoutingConst.addTransactionRoute:
-        return CupertinoPageRoute(builder: (context) => const AuthScreen());
+        return CupertinoPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => AddTransactionCubit(
+              spreadsheetService: getIt(),
+            ),
+            child: const AddTransactionScreen(),
+          ),
+        );
       default:
         return CupertinoPageRoute(builder: (context) => const AuthScreen());
     }

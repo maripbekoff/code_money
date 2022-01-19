@@ -1,3 +1,4 @@
+import 'package:code_money/src/router/routing_const.dart';
 import 'package:code_money/src/screens/home/cubit/home_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,16 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            return Text(
-              state is HomeLoaded ? state.spreadsheet.properties.title : '',
-            );
-          },
-        ),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('ДДС'),
       ),
       child: BlocBuilder<HomeCubit, HomeState>(
+        bloc: context.read(),
         builder: (context, state) {
           if (state is HomeLoaded) {
             return Stack(
@@ -79,7 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.zero,
                     borderRadius: BorderRadius.circular(360),
                     child: const Icon(CupertinoIcons.add),
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      RoutingConst.addTransactionRoute,
+                    ),
                   ),
                 ),
               ],

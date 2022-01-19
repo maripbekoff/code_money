@@ -1,6 +1,8 @@
 import 'package:code_money/environment_config.dart';
 import 'package:code_money/src/common/dio/app_dio.dart';
+import 'package:code_money/src/models/remote/articles/article_model.dart';
 import 'package:code_money/src/models/remote/balance/balance_model.dart';
+import 'package:code_money/src/models/remote/directions/direction_model.dart';
 import 'package:code_money/src/models/remote/sheets/spreadsheet_model.dart';
 import 'package:code_money/src/models/remote/transactions/transaction_model.dart';
 import 'package:dio/dio.dart';
@@ -8,7 +10,10 @@ import 'package:dio/dio.dart';
 abstract class SpreadsheetService {
   Future<SpreadsheetModel> getSpeadsheet();
   Future<List<BalanceModel>> getBalances();
+  Future<List<DirectionModel>> getDirections();
+  Future<List<ArticleModel>> getArticles();
   Future<List<TransactionModel>> getTransactions();
+  Future<void> createTransaction({required TransactionModel transaction});
 }
 
 class SpreadsheetServiceImpl implements SpreadsheetService {
@@ -24,11 +29,9 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
       final Response res = await dio.get(EnvironmentConfig.spreadsheetId);
 
       return SpreadsheetModel.fromJson(res.data);
-    } on DioError catch (e) {
-      print(e);
+    } on DioError {
       rethrow;
     } catch (e) {
-      print(e);
       rethrow;
     }
   }
@@ -64,11 +67,9 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
       }
 
       return balances;
-    } on DioError catch (e) {
-      print(e);
+    } on DioError {
       rethrow;
     } catch (e) {
-      print(e);
       rethrow;
     }
   }
@@ -101,6 +102,90 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
             ),
           )
           .toList();
+    } on DioError {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> createTransaction({
+    required TransactionModel transaction,
+  }) async {
+    try {
+      await dio.post(
+        EnvironmentConfig.spreadsheetId + '/values/A5:K5:append',
+        queryParameters: {'valueInputOption': 'USER_ENTERED'},
+        data: {
+          'majorDimension': 'ROWS',
+          'values': [
+            [
+              null,
+              null,
+              transaction.date,
+              transaction.sum,
+              transaction.wallet,
+              transaction.direction,
+              transaction.counterAgent,
+              transaction.appointment,
+              transaction.article,
+              null,
+              null
+            ],
+          ],
+        },
+      );
+    } on DioError {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ArticleModel>> getArticles() async {
+    try {
+      final Response res = await dio.get(
+        EnvironmentConfig.spreadsheetId + '/values/ДДС: статьи!A2:A100',
+        queryParameters: {
+          'majorDimension': 'COLUMNS',
+          'valueRenderOption': 'UNFORMATTED_VALUE',
+        },
+      );
+
+      List<ArticleModel> list = [];
+
+      for (final article in res.data['values'].first) {
+        list.add(ArticleModel(title: article));
+      }
+
+      return list;
+    } on DioError {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<DirectionModel>> getDirections() async {
+    try {
+      final Response res = await dio.get(
+        EnvironmentConfig.spreadsheetId + '/values/Справочники!A2:A100',
+        queryParameters: {
+          'majorDimension': 'COLUMNS',
+          'valueRenderOption': 'UNFORMATTED_VALUE',
+        },
+      );
+
+      List<DirectionModel> list = [];
+
+      for (final article in res.data['values'].first) {
+        list.add(DirectionModel(title: article));
+      }
+
+      return list;
     } on DioError {
       rethrow;
     } catch (e) {

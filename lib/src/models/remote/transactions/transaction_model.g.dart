@@ -8,17 +8,17 @@ part of 'transaction_model.dart';
 
 TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
     TransactionModel(
-      month: json['month'] as String,
-      monthNum: json['monthNum'] as int,
-      date: json['date'] as int,
+      month: json['month'] as String?,
+      monthNum: json['monthNum'] as int?,
+      date: json['date'] as String,
       sum: json['sum'] as int,
       wallet: json['wallet'] as String,
       direction: json['direction'] as String,
       counterAgent: json['counterAgent'] as String,
       appointment: json['appointment'] as String,
       article: json['article'] as String,
-      admission: json['admission'] as bool,
-      kindOfActivity: json['kindOfActivity'] as String,
+      admission: json['admission'] as bool?,
+      kindOfActivity: json['kindOfActivity'] as String?,
     );
 
 Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>

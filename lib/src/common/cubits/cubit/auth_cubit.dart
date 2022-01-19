@@ -14,7 +14,6 @@ class AuthCubit extends Cubit<AuthState> {
   }) : super(AuthInitial());
 
   void appStarted() async {
-    print(tokensBox.get('access'));
     tokensBox.get('access') == null
         ? emit(UnAuthenticated())
         : emit(Authenticated());

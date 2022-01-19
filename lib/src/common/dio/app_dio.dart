@@ -37,6 +37,9 @@ class DioInterceptor extends Interceptor {
           (await googleSignInAccount!.authentication).accessToken;
       await tokensBox.put('access', accessToken);
 
+      err.requestOptions.headers['Authorization'] =
+          'Bearer ' + tokensBox.get('access');
+
       final opts = Options(
         method: err.requestOptions.method,
         headers: err.requestOptions.headers,
