@@ -34,3 +34,43 @@ class AppTextField extends StatelessWidget {
     );
   }
 }
+
+class AppTextFieldFormRow extends StatelessWidget {
+  const AppTextFieldFormRow({
+    Key? key,
+    required this.controller,
+    this.onTap,
+    this.prefix,
+    required this.placeholder,
+    this.readOnly = false,
+    this.keyboardType,
+    this.maxLength,
+    this.inputFormatters,
+    this.validator,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+  final Widget? prefix;
+  final String placeholder;
+  final VoidCallback? onTap;
+  final bool readOnly;
+  final int? maxLength;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTextFormFieldRow(
+      prefix: prefix,
+      controller: controller,
+      maxLength: maxLength,
+      placeholder: placeholder,
+      readOnly: readOnly,
+      onTap: onTap,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      validator: validator,
+    );
+  }
+}

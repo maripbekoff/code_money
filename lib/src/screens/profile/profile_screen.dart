@@ -1,7 +1,5 @@
 import 'package:code_money/src/common/dependencies/injection_container.dart';
-import 'package:code_money/src/models/remote/articles/article_model.dart';
-import 'package:code_money/src/models/remote/balance/balance_model.dart';
-import 'package:code_money/src/models/remote/directions/direction_model.dart';
+import 'package:code_money/src/router/routing_const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
@@ -25,7 +23,10 @@ class ProfileScreen extends StatelessWidget {
             Navigator.of(
               context,
               rootNavigator: true,
-            ).popUntil((route) => route.isFirst);
+            ).pushNamedAndRemoveUntil(
+              RoutingConst.authRoute,
+              (route) => route.isFirst,
+            );
           },
         ),
       ),

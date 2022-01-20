@@ -1,4 +1,5 @@
 import 'package:code_money/src/common/dependencies/injection_container.dart';
+import 'package:code_money/src/models/local/router/add_transaction_screen_args.dart';
 import 'package:code_money/src/router/routing_const.dart';
 import 'package:code_money/src/screens/add_transaction/add_transaction_screen.dart';
 import 'package:code_money/src/screens/add_transaction/cubit/add_transaction_cubit.dart';
@@ -37,12 +38,17 @@ class AppRouter {
       case RoutingConst.profileRoute:
         return CupertinoPageRoute(builder: (context) => const ProfileScreen());
       case RoutingConst.addTransactionRoute:
+        AddTransactionScreenArgs args =
+            routeSettings.arguments as AddTransactionScreenArgs;
+
         return CupertinoPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => AddTransactionCubit(
               spreadsheetService: getIt(),
             ),
-            child: const AddTransactionScreen(),
+            child: AddTransactionScreen(
+              onCreated: args.onCreated,
+            ),
           ),
         );
       default:

@@ -28,13 +28,16 @@ class HomeCubit extends Cubit<HomeState> {
       List<DirectionModel> directions =
           await spreadsheetService.getDirections();
 
-      if (getIt.isRegistered(instanceName: 'balances')) {
-        getIt.registerLazySingleton<List<BalanceModel>>(() => balances,
-            instanceName: 'balances');
-        getIt.registerLazySingleton<List<ArticleModel>>(() => articles,
-            instanceName: 'articles');
-        getIt.registerLazySingleton<List<DirectionModel>>(() => directions,
-            instanceName: 'directions');
+      if (!getIt.isRegistered<List<BalanceModel>>()) {
+        getIt.registerLazySingleton<List<BalanceModel>>(
+          () => balances,
+        );
+        getIt.registerLazySingleton<List<ArticleModel>>(
+          () => articles,
+        );
+        getIt.registerLazySingleton<List<DirectionModel>>(
+          () => directions,
+        );
       }
 
       emit(HomeLoaded(

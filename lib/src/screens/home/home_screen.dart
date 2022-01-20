@@ -1,3 +1,4 @@
+import 'package:code_money/src/models/local/router/add_transaction_screen_args.dart';
 import 'package:code_money/src/router/routing_const.dart';
 import 'package:code_money/src/screens/home/cubit/home_cubit.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,6 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () => Navigator.pushNamed(
                       context,
                       RoutingConst.addTransactionRoute,
+                      arguments: AddTransactionScreenArgs(
+                        onCreated: () => context.read<HomeCubit>().init(),
+                      ),
                     ),
                   ),
                 ),
