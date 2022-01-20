@@ -82,6 +82,7 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
         queryParameters: {
           'majorDimension': 'ROWS',
           'valueRenderOption': 'UNFORMATTED_VALUE',
+          'dateTimeRenderOption': 'FORMATTED_STRING',
         },
       );
 

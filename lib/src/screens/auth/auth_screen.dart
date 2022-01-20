@@ -24,7 +24,7 @@ class AuthScreen extends StatelessWidget {
                     context,
                     rootNavigator: true,
                   ).pushReplacementNamed(
-                    RoutingConst.homeRoute,
+                    RoutingConst.mainRoute,
                   );
                 }
               },
