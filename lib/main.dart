@@ -24,6 +24,9 @@ class App extends StatelessWidget {
       child: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           return CupertinoApp(
+            theme: const CupertinoThemeData(
+              brightness: Brightness.light,
+            ),
             debugShowCheckedModeBanner: false,
             initialRoute: state is Authenticated
                 ? RoutingConst.mainRoute

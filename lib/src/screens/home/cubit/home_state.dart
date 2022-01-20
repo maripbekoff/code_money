@@ -18,3 +18,5 @@ class HomeLoaded extends HomeState {
 }
 
 class HomeFailed extends HomeState {}
+
+class NoPermissions extends HomeState {}

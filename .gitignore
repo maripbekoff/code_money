@@ -31,6 +31,14 @@
 .pub/
 /build/
 
+# google services
+android/app/google-services.json
+
+# generated files
+*.g.dart
+
+lib/environment_config.dart
+
 # Web related
 lib/generated_plugin_registrant.dart
 

@@ -83,6 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             );
+          } else if (state is NoPermissions) {
+            return const Center(
+              child: Text('У вас нет доступа к приложению!'),
+            );
           }
           return const Center(
             child: CupertinoActivityIndicator(),
