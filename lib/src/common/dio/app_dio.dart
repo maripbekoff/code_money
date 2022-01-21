@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 
-class AppDio {
+class SpreadsheetDio {
   Dio dio = Dio(BaseOptions(
     baseUrl: EnvironmentConfig.apiUrl,
   ))
@@ -13,6 +13,14 @@ class AppDio {
   set path(String path) => dio = Dio(
         BaseOptions(baseUrl: EnvironmentConfig.apiUrl + path),
       )..interceptors.add(DioInterceptor());
+}
+
+class GithubDio {
+  Dio dio = Dio(BaseOptions(baseUrl: EnvironmentConfig.githubApiUrl));
+
+  set path(String path) => dio = Dio(
+        BaseOptions(baseUrl: EnvironmentConfig.githubApiUrl + path),
+      );
 }
 
 class DioInterceptor extends Interceptor {

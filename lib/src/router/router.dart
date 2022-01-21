@@ -5,10 +5,12 @@ import 'package:code_money/src/screens/add_transaction/add_transaction_screen.da
 import 'package:code_money/src/screens/add_transaction/cubit/add_transaction_cubit.dart';
 import 'package:code_money/src/screens/auth/auth_screen.dart';
 import 'package:code_money/src/screens/auth/cubit/log_in_cubit.dart';
+import 'package:code_money/src/screens/force_update/force_update_screen.dart';
 import 'package:code_money/src/screens/home/cubit/home_cubit.dart';
 import 'package:code_money/src/screens/home/home_screen.dart';
 import 'package:code_money/src/screens/main/main_screen.dart';
 import 'package:code_money/src/screens/profile/profile_screen.dart';
+import 'package:code_money/src/screens/splash/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,6 +52,14 @@ class AppRouter {
               onCreated: args.onCreated,
             ),
           ),
+        );
+      case RoutingConst.forceUpdateRoute:
+        return CupertinoPageRoute(
+          builder: (context) => const ForceUpdateScreen(),
+        );
+      case RoutingConst.splashRoute:
+        return CupertinoPageRoute(
+          builder: (context) => const SplashScreen(),
         );
       default:
         return CupertinoPageRoute(builder: (context) => const AuthScreen());

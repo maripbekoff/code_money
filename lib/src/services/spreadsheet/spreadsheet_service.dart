@@ -19,8 +19,8 @@ abstract class SpreadsheetService {
 class SpreadsheetServiceImpl implements SpreadsheetService {
   late Dio dio;
 
-  SpreadsheetServiceImpl({required AppDio appDio}) {
-    dio = appDio.dio;
+  SpreadsheetServiceImpl({required SpreadsheetDio spreadsheetDio}) {
+    dio = spreadsheetDio.dio;
   }
 
   @override

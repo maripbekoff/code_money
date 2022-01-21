@@ -20,21 +20,32 @@ class App extends StatelessWidget {
     return BlocProvider(
       create: (context) => AuthCubit(
         googleSignIn: getIt(),
+        githubService: getIt(),
       )..appStarted(),
       child: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
-          return CupertinoApp(
-            theme: const CupertinoThemeData(
-              brightness: Brightness.light,
-            ),
-            debugShowCheckedModeBanner: false,
-            initialRoute: state is Authenticated
-                ? RoutingConst.mainRoute
-                : RoutingConst.authRoute,
-            onGenerateRoute: AppRouter.onGenerateRoute,
-          );
+          if (state is Authenticated) {
+            return buildApp(state.initialRoute);
+          } else if (state is UnAuthenticated) {
+            return buildApp(state.initialRoute);
+          } else if (state is ForceUpdate) {
+            return buildApp(state.initialRoute);
+          }
+          return buildApp(RoutingConst.splashRoute);
         },
       ),
+    );
+  }
+
+  CupertinoApp buildApp(String initialRoute) {
+    return CupertinoApp(
+      key: Key(initialRoute),
+      theme: const CupertinoThemeData(
+        brightness: Brightness.light,
+      ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: initialRoute,
+      onGenerateRoute: AppRouter.onGenerateRoute,
     );
   }
 }

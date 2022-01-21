@@ -20,7 +20,6 @@ class LogInCubit extends Cubit<LogInState> {
       final String? accessToken =
           (await googleSignInAccount!.authentication).accessToken;
       await tokensBox.put('access', accessToken);
-      print(accessToken);
       emit(LogInLoaded());
     } catch (e) {
       emit(LogInFailed());
