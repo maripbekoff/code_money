@@ -25,13 +25,13 @@ class AuthCubit extends Cubit<AuthState> {
     packageInfo = await PackageInfo.fromPlatform();
     ReleaseModel releaseVersion = (await githubService.checkAppVersion()).first;
 
-    // if (releaseVersion.tagName != packageInfo.version) {
-    //   if (!getIt.isRegistered<ReleaseModel>()) {
-    //     getIt.registerLazySingleton<ReleaseModel>(() => releaseVersion);
-    //   }
-    //   emit(ForceUpdate());
-    //   return;
-    // }
+    if (releaseVersion.tagName != packageInfo.version) {
+      if (!getIt.isRegistered<ReleaseModel>()) {
+        getIt.registerLazySingleton<ReleaseModel>(() => releaseVersion);
+      }
+      emit(ForceUpdate());
+      return;
+    }
 
     tokensBox.get('access') == null
         ? emit(UnAuthenticated())
