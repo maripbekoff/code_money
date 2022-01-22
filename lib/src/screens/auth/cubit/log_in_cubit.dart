@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:code_money/src/models/local/user/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
@@ -8,6 +9,7 @@ part 'log_in_state.dart';
 class LogInCubit extends Cubit<LogInState> {
   final GoogleSignIn googleSignIn;
   final Box tokensBox = Hive.box('tokens');
+  final Box userBox = Hive.box('user');
 
   LogInCubit({
     required this.googleSignIn,
@@ -17,10 +19,20 @@ class LogInCubit extends Cubit<LogInState> {
     emit(LogInLoading());
     try {
       GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-      final String? accessToken =
-          (await googleSignInAccount!.authentication).accessToken;
-      await tokensBox.put('access', accessToken);
-      emit(LogInLoaded());
+      if (googleSignInAccount != null) {
+        await userBox.put(
+          'googleAccount',
+          UserModel(
+            photoUrl: googleSignInAccount.photoUrl ?? '',
+            name: googleSignInAccount.displayName ?? 'Имя',
+            email: googleSignInAccount.email,
+          ),
+        );
+        final String? accessToken =
+            (await googleSignInAccount.authentication).accessToken;
+        await tokensBox.put('access', accessToken);
+        emit(LogInLoaded());
+      }
     } catch (e) {
       emit(LogInFailed());
       rethrow;
