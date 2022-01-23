@@ -1,5 +1,6 @@
 import 'package:code_money/src/common/dependencies/injection_container.dart';
 import 'package:code_money/src/common/widgets/app_text_field.dart';
+import 'package:code_money/src/common/widgets/modals/picker_with_search_field.dart';
 import 'package:code_money/src/models/remote/articles/article_model.dart';
 import 'package:code_money/src/models/remote/balance/balance_model.dart';
 import 'package:code_money/src/models/remote/directions/direction_model.dart';
@@ -127,68 +128,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   placeholder: 'Kaspi/Альфа',
                   readOnly: true,
                   onTap: () {
-                    TextEditingController searchController =
-                        TextEditingController();
-                    FixedExtentScrollController scrollController =
-                        FixedExtentScrollController();
-
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) {
-                        return Container(
-                          decoration: const BoxDecoration(
-                            color: CupertinoColors.white,
-                          ),
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: Column(
-                            children: [
-                              CupertinoTextField(
-                                autofocus: true,
-                                padding: const EdgeInsets.all(20),
-                                placeholder: 'Поиск..',
-                                controller: searchController,
-                                onChanged: (text) {
-                                  BalanceModel filteredBalance =
-                                      balances.firstWhere(
-                                    (e) => e.title
-                                        .toLowerCase()
-                                        .startsWith(text.toLowerCase()),
-                                    orElse: () =>
-                                        BalanceModel(title: '', total: 0),
-                                  );
-                                  if (filteredBalance.title.isNotEmpty) {
-                                    scrollController.animateToItem(
-                                      balances.indexWhere(
-                                        (b) => b == filteredBalance,
-                                      ),
-                                      duration: const Duration(
-                                        milliseconds: 100,
-                                      ),
-                                      curve: Curves.bounceIn,
-                                    );
-                                  }
-                                },
-                              ),
-                              Expanded(
-                                child: CupertinoPicker.builder(
-                                  scrollController: scrollController,
-                                  childCount: balances.length,
-                                  itemExtent: 60,
-                                  onSelectedItemChanged: (index) {
-                                    setState(() {
-                                      walletController.text =
-                                          balances[index].title;
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    return Center(
-                                      child: Text(balances[index].title),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                        return PickerWithSearchField(
+                          list: balances.map((e) => e.title).toList(),
+                          onSelectedItemChanged: (title) {
+                            setState(() {
+                              walletController.text = title;
+                            });
+                          },
                         );
                       },
                     );
@@ -206,66 +155,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   },
                   readOnly: true,
                   onTap: () {
-                    TextEditingController searchController =
-                        TextEditingController();
-                    FixedExtentScrollController scrollController =
-                        FixedExtentScrollController();
-
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) {
-                        return Container(
-                          decoration: const BoxDecoration(
-                            color: CupertinoColors.white,
-                          ),
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: Column(
-                            children: [
-                              CupertinoTextField(
-                                autofocus: true,
-                                padding: const EdgeInsets.all(20),
-                                placeholder: 'Поиск..',
-                                controller: searchController,
-                                onChanged: (text) {
-                                  final filteredBalance = directions.firstWhere(
-                                    (e) => e.title
-                                        .toLowerCase()
-                                        .startsWith(text.toLowerCase()),
-                                    orElse: () => DirectionModel(title: ''),
-                                  );
-                                  if (filteredBalance.title.isNotEmpty) {
-                                    scrollController.animateToItem(
-                                      directions.indexWhere(
-                                        (b) => b == filteredBalance,
-                                      ),
-                                      duration: const Duration(
-                                        milliseconds: 100,
-                                      ),
-                                      curve: Curves.bounceIn,
-                                    );
-                                  }
-                                },
-                              ),
-                              Expanded(
-                                child: CupertinoPicker.builder(
-                                  scrollController: scrollController,
-                                  childCount: directions.length,
-                                  itemExtent: 60,
-                                  onSelectedItemChanged: (index) {
-                                    setState(() {
-                                      directionController.text =
-                                          directions[index].title;
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    return Center(
-                                      child: Text(directions[index].title),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                        return PickerWithSearchField(
+                          list: directions.map((e) => e.title).toList(),
+                          onSelectedItemChanged: (title) {
+                            setState(() {
+                              directionController.text = title;
+                            });
+                          },
                         );
                       },
                     );
@@ -293,66 +192,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   },
                   readOnly: true,
                   onTap: () {
-                    TextEditingController searchController =
-                        TextEditingController();
-                    FixedExtentScrollController scrollController =
-                        FixedExtentScrollController();
-
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) {
-                        return Container(
-                          decoration: const BoxDecoration(
-                            color: CupertinoColors.white,
-                          ),
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: Column(
-                            children: [
-                              CupertinoTextField(
-                                autofocus: true,
-                                padding: const EdgeInsets.all(20),
-                                placeholder: 'Поиск..',
-                                controller: searchController,
-                                onChanged: (text) {
-                                  final filteredBalance = articles.firstWhere(
-                                    (e) => e.title
-                                        .toLowerCase()
-                                        .startsWith(text.toLowerCase()),
-                                    orElse: () => ArticleModel(title: ''),
-                                  );
-                                  if (filteredBalance.title.isNotEmpty) {
-                                    scrollController.animateToItem(
-                                      articles.indexWhere(
-                                        (b) => b == filteredBalance,
-                                      ),
-                                      duration: const Duration(
-                                        milliseconds: 100,
-                                      ),
-                                      curve: Curves.bounceIn,
-                                    );
-                                  }
-                                },
-                              ),
-                              Expanded(
-                                child: CupertinoPicker.builder(
-                                  scrollController: scrollController,
-                                  childCount: articles.length,
-                                  itemExtent: 60,
-                                  onSelectedItemChanged: (index) {
-                                    setState(() {
-                                      articleController.text =
-                                          articles[index].title;
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    return Center(
-                                      child: Text(articles[index].title),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                        return PickerWithSearchField(
+                          list: articles.map((e) => e.title).toList(),
+                          onSelectedItemChanged: (title) {
+                            setState(() {
+                              articleController.text = title;
+                            });
+                          },
                         );
                       },
                     );
