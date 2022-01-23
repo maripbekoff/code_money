@@ -262,7 +262,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               counterAgent: counterAgentController.text,
                               appointment: appointmentController.text,
                               article: articleController.text,
-                              admission: null,
+                              isAdmission: null,
                               kindOfActivity: null,
                             );
                             context

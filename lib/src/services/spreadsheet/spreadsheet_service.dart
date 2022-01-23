@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 
 abstract class SpreadsheetService {
   Future<SpreadsheetModel> getSpeadsheet();
+  Future<BalanceModel> getTotalBalance();
   Future<List<BalanceModel>> getBalances();
   Future<List<DirectionModel>> getDirections();
   Future<List<ArticleModel>> getArticles();
@@ -29,6 +30,27 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
       final Response res = await dio.get(EnvironmentConfig.spreadsheetId);
 
       return SpreadsheetModel.fromJson(res.data);
+    } on DioError {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<BalanceModel> getTotalBalance() async {
+    try {
+      final Response res = await dio.get(
+        EnvironmentConfig.spreadsheetId + '/values/A1:A3',
+        queryParameters: {
+          'majorDimension': 'COLUMNS',
+          'valueRenderOption': 'UNFORMATTED_VALUE',
+        },
+      );
+
+      final List cells = res.data['values'].first;
+
+      return BalanceModel(title: cells.first, total: cells.last);
     } on DioError {
       rethrow;
     } catch (e) {
@@ -98,7 +120,7 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
               counterAgent: e[6],
               appointment: e[7],
               article: e[8],
-              admission: e[9] == 'Поступление',
+              isAdmission: e[9] == 'Поступление',
               kindOfActivity: e[10],
             ),
           )

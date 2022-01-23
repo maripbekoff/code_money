@@ -4,6 +4,7 @@ import 'package:code_money/src/common/hive/hive_container.dart';
 import 'package:code_money/src/router/router.dart';
 import 'package:code_money/src/router/routing_const.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
@@ -43,6 +44,10 @@ class App extends StatelessWidget {
       theme: const CupertinoThemeData(
         brightness: Brightness.light,
       ),
+      localizationsDelegates: const [
+        DefaultCupertinoLocalizations.delegate,
+        DefaultMaterialLocalizations.delegate,
+      ],
       debugShowCheckedModeBanner: false,
       initialRoute: initialRoute,
       onGenerateRoute: AppRouter.onGenerateRoute,

@@ -17,7 +17,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       counterAgent: json['counterAgent'] as String,
       appointment: json['appointment'] as String,
       article: json['article'] as String,
-      admission: json['admission'] as bool?,
+      isAdmission: json['isAdmission'] as bool?,
       kindOfActivity: json['kindOfActivity'] as String?,
     );
 
@@ -32,6 +32,6 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
       'counterAgent': instance.counterAgent,
       'appointment': instance.appointment,
       'article': instance.article,
-      'admission': instance.admission,
+      'isAdmission': instance.isAdmission,
       'kindOfActivity': instance.kindOfActivity,
     };

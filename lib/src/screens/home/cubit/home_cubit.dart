@@ -21,6 +21,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoading());
 
     try {
+      BalanceModel totalBalance = await spreadsheetService.getTotalBalance();
       List<BalanceModel> balances = await spreadsheetService.getBalances();
       List<TransactionModel> transactions =
           await spreadsheetService.getTransactions();
@@ -41,8 +42,9 @@ class HomeCubit extends Cubit<HomeState> {
       }
 
       emit(HomeLoaded(
+        totalBalance: totalBalance,
         balances: balances,
-        transactions: transactions,
+        transactions: transactions.reversed.toList(),
       ));
     } on DioError catch (e) {
       if ((e.response?.statusCode ?? 0) == 403) {

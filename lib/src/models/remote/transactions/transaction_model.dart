@@ -13,7 +13,7 @@ class TransactionModel {
   final String counterAgent;
   final String appointment;
   final String article;
-  final bool? admission;
+  final bool? isAdmission;
   final String? kindOfActivity;
 
   TransactionModel({
@@ -26,7 +26,7 @@ class TransactionModel {
     required this.counterAgent,
     required this.appointment,
     required this.article,
-    required this.admission,
+    required this.isAdmission,
     required this.kindOfActivity,
   });
 
