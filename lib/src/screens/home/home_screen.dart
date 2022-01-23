@@ -179,11 +179,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                      if (!transactionsFiltered.isNotEmpty)
+                      if (isSelectedAllWallets
+                          ? state.transactions.isEmpty
+                          : transactionsFiltered.isEmpty)
                         SizedBox(
                           height: MediaQuery.of(context).size.height / 3.5,
                         ),
-                      if (!transactionsFiltered.isNotEmpty)
+                      if (isSelectedAllWallets
+                          ? state.transactions.isEmpty
+                          : transactionsFiltered.isEmpty)
                         const Center(
                           child: Text(
                             'Записей не найдено!',
