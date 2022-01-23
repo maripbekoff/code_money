@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           bloc: context.read(),
           listener: (context, state) {
             if (state is HomeLoaded) {
+              filterBalances.clear();
               final totalBalance = BalanceModel(
                 title: 'Все кошельки',
                 total: state.totalBalance.total,
@@ -47,9 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           builder: (context, state) {
             if (state is HomeLoaded) {
+              bool isSelectedAllWallets =
+                  selectedBalance.title == 'Все кошельки';
               List<TransactionModel> transactionsFiltered = [];
 
-              if (selectedBalance.title != 'Все кошельки') {
+              if (!isSelectedAllWallets) {
                 transactionsFiltered = state.transactions
                     .where(
                       (t) => t.wallet == selectedBalance.title,
@@ -115,65 +118,81 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: transactionsFiltered.isEmpty
-                            ? state.transactions.length
-                            : transactionsFiltered.length,
-                        padding: EdgeInsets.zero,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 5),
-                        itemBuilder: (context, index) {
-                          TransactionModel transaction;
+                      if (state.transactions.isNotEmpty)
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: isSelectedAllWallets
+                              ? state.transactions.length
+                              : transactionsFiltered.length,
+                          padding: EdgeInsets.zero,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 5),
+                          itemBuilder: (context, index) {
+                            TransactionModel transaction;
 
-                          if (transactionsFiltered.isEmpty) {
-                            transaction = state.transactions[index];
-                          } else {
-                            transaction = transactionsFiltered[index];
-                          }
+                            if (isSelectedAllWallets) {
+                              transaction = state.transactions[index];
+                            } else {
+                              transaction = transactionsFiltered[index];
+                            }
 
-                          return Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: CupertinoColors.systemGrey6,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  transaction.wallet,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                            return Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: CupertinoColors.systemGrey6,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    transaction.wallet,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                const Spacer(),
-                                Column(
-                                  children: [
-                                    Text(
-                                      '${transaction.isAdmission ?? false ? '+' : '-'} ₸${transaction.sum}',
-                                      style: TextStyle(
-                                        color: transaction.isAdmission ?? false
-                                            ? CupertinoColors.activeGreen
-                                            : CupertinoColors.systemRed,
+                                  const Spacer(),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        '${transaction.isAdmission ?? false ? '+' : '-'} ${transaction.sum.abs()} ₸',
+                                        style: TextStyle(
+                                          color:
+                                              transaction.isAdmission ?? false
+                                                  ? CupertinoColors.activeGreen
+                                                  : CupertinoColors.systemRed,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      transaction.date,
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                        fontSize: 12,
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        transaction.date,
+                                        textAlign: TextAlign.right,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      if (!transactionsFiltered.isNotEmpty)
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 3.5,
+                        ),
+                      if (!transactionsFiltered.isNotEmpty)
+                        const Center(
+                          child: Text(
+                            'Записей не найдено!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        ),
                     ],
                   ),
                   Positioned(

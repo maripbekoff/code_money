@@ -6,7 +6,6 @@ import 'package:code_money/src/models/remote/directions/direction_model.dart';
 import 'package:code_money/src/models/remote/transactions/transaction_model.dart';
 import 'package:code_money/src/screens/add_transaction/cubit/add_transaction_cubit.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddTransactionScreen extends StatefulWidget {
@@ -38,6 +37,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dateController.text =
+        '${dateTimeNow.day}.${dateTimeNow.month}.${dateTimeNow.year}';
+
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
       navigationBar: const CupertinoNavigationBar(
@@ -104,9 +106,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   placeholder: '30 000',
                   maxLength: 20,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
                 ),
                 AppTextFieldFormRow(
                   prefix: const Text('Кошелек'),
@@ -120,6 +119,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   placeholder: 'Kaspi/Альфа',
                   readOnly: true,
                   onTap: () {
+                    TextEditingController searchController =
+                        TextEditingController();
+                    FixedExtentScrollController scrollController =
+                        FixedExtentScrollController();
+
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) {
@@ -128,17 +132,54 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             color: CupertinoColors.white,
                           ),
                           height: MediaQuery.of(context).size.height / 2,
-                          child: CupertinoPicker.builder(
-                            childCount: balances.length,
-                            itemExtent: 60,
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-                                walletController.text = balances[index].title;
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              return Text(balances[index].title);
-                            },
+                          child: Column(
+                            children: [
+                              CupertinoTextField(
+                                autofocus: true,
+                                padding: const EdgeInsets.all(20),
+                                placeholder: 'Поиск..',
+                                controller: searchController,
+                                onChanged: (text) {
+                                  BalanceModel filteredBalance =
+                                      balances.firstWhere(
+                                    (e) => e.title
+                                        .toLowerCase()
+                                        .startsWith(text.toLowerCase()),
+                                    orElse: () =>
+                                        BalanceModel(title: '', total: 0),
+                                  );
+                                  if (filteredBalance.title.isNotEmpty) {
+                                    scrollController.animateToItem(
+                                      balances.indexWhere(
+                                        (b) => b == filteredBalance,
+                                      ),
+                                      duration: const Duration(
+                                        milliseconds: 100,
+                                      ),
+                                      curve: Curves.bounceIn,
+                                    );
+                                  }
+                                },
+                              ),
+                              Expanded(
+                                child: CupertinoPicker.builder(
+                                  scrollController: scrollController,
+                                  childCount: balances.length,
+                                  itemExtent: 60,
+                                  onSelectedItemChanged: (index) {
+                                    setState(() {
+                                      walletController.text =
+                                          balances[index].title;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return Center(
+                                      child: Text(balances[index].title),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -157,6 +198,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   },
                   readOnly: true,
                   onTap: () {
+                    TextEditingController searchController =
+                        TextEditingController();
+                    FixedExtentScrollController scrollController =
+                        FixedExtentScrollController();
+
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) {
@@ -165,18 +211,52 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             color: CupertinoColors.white,
                           ),
                           height: MediaQuery.of(context).size.height / 2,
-                          child: CupertinoPicker.builder(
-                            childCount: directions.length,
-                            itemExtent: 60,
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-                                directionController.text =
-                                    directions[index].title;
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              return Text(directions[index].title);
-                            },
+                          child: Column(
+                            children: [
+                              CupertinoTextField(
+                                autofocus: true,
+                                padding: const EdgeInsets.all(20),
+                                placeholder: 'Поиск..',
+                                controller: searchController,
+                                onChanged: (text) {
+                                  final filteredBalance = directions.firstWhere(
+                                    (e) => e.title
+                                        .toLowerCase()
+                                        .startsWith(text.toLowerCase()),
+                                    orElse: () => DirectionModel(title: ''),
+                                  );
+                                  if (filteredBalance.title.isNotEmpty) {
+                                    scrollController.animateToItem(
+                                      directions.indexWhere(
+                                        (b) => b == filteredBalance,
+                                      ),
+                                      duration: const Duration(
+                                        milliseconds: 100,
+                                      ),
+                                      curve: Curves.bounceIn,
+                                    );
+                                  }
+                                },
+                              ),
+                              Expanded(
+                                child: CupertinoPicker.builder(
+                                  scrollController: scrollController,
+                                  childCount: directions.length,
+                                  itemExtent: 60,
+                                  onSelectedItemChanged: (index) {
+                                    setState(() {
+                                      directionController.text =
+                                          directions[index].title;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return Center(
+                                      child: Text(directions[index].title),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -205,6 +285,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   },
                   readOnly: true,
                   onTap: () {
+                    TextEditingController searchController =
+                        TextEditingController();
+                    FixedExtentScrollController scrollController =
+                        FixedExtentScrollController();
+
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) {
@@ -213,17 +298,52 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             color: CupertinoColors.white,
                           ),
                           height: MediaQuery.of(context).size.height / 2,
-                          child: CupertinoPicker.builder(
-                            childCount: articles.length,
-                            itemExtent: 60,
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-                                articleController.text = articles[index].title;
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              return Text(articles[index].title);
-                            },
+                          child: Column(
+                            children: [
+                              CupertinoTextField(
+                                autofocus: true,
+                                padding: const EdgeInsets.all(20),
+                                placeholder: 'Поиск..',
+                                controller: searchController,
+                                onChanged: (text) {
+                                  final filteredBalance = articles.firstWhere(
+                                    (e) => e.title
+                                        .toLowerCase()
+                                        .startsWith(text.toLowerCase()),
+                                    orElse: () => ArticleModel(title: ''),
+                                  );
+                                  if (filteredBalance.title.isNotEmpty) {
+                                    scrollController.animateToItem(
+                                      articles.indexWhere(
+                                        (b) => b == filteredBalance,
+                                      ),
+                                      duration: const Duration(
+                                        milliseconds: 100,
+                                      ),
+                                      curve: Curves.bounceIn,
+                                    );
+                                  }
+                                },
+                              ),
+                              Expanded(
+                                child: CupertinoPicker.builder(
+                                  scrollController: scrollController,
+                                  childCount: articles.length,
+                                  itemExtent: 60,
+                                  onSelectedItemChanged: (index) {
+                                    setState(() {
+                                      articleController.text =
+                                          articles[index].title;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return Center(
+                                      child: Text(articles[index].title),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },

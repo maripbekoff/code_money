@@ -33,8 +33,6 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    print(tokensBox.get('access'));
-
     tokensBox.get('access') == null
         ? emit(UnAuthenticated())
         : emit(Authenticated());
