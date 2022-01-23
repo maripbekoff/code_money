@@ -41,6 +41,7 @@ dependencies:
   url_launcher: ^6.0.18
   flutter_svg: ^1.0.2
   cached_network_image: ^3.2.0
+  flutter_multi_formatter: ^2.5.1
 
 dev_dependencies:
   flutter_test:
@@ -50,8 +51,6 @@ dev_dependencies:
   rename: ^2.0.1
   build_runner: ^2.1.7
   hive_generator: ^1.1.2
-
-
 
 flutter:
 

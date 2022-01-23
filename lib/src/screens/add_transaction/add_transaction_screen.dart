@@ -7,6 +7,7 @@ import 'package:code_money/src/models/remote/transactions/transaction_model.dart
 import 'package:code_money/src/screens/add_transaction/cubit/add_transaction_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({
@@ -36,10 +37,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final DateTime dateTimeNow = DateTime.now();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     dateController.text =
         '${dateTimeNow.day}.${dateTimeNow.month}.${dateTimeNow.year}';
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
       navigationBar: const CupertinoNavigationBar(
@@ -103,9 +108,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     }
                     return null;
                   },
-                  placeholder: '30 000',
-                  maxLength: 20,
+                  placeholder: '30,000.00',
+                  maxLength: 15,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    MoneyInputFormatter(),
+                  ],
                 ),
                 AppTextFieldFormRow(
                   prefix: const Text('Кошелек'),
