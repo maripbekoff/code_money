@@ -11,7 +11,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       month: json['month'] as String?,
       monthNum: json['monthNum'] as int?,
       date: json['date'] as String,
-      sum: json['sum'] as int,
+      sum: (json['sum'] as num).toDouble(),
       wallet: json['wallet'] as String,
       direction: json['direction'] as String,
       counterAgent: json['counterAgent'] as String,

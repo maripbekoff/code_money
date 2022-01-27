@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'widgets/transaction_widget.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -137,46 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               transaction = transactionsFiltered[index];
                             }
 
-                            return Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: CupertinoColors.systemGrey6,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    transaction.wallet,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        '${transaction.isAdmission ?? false ? '+' : '-'} ${transaction.sum.abs()} ₸',
-                                        style: TextStyle(
-                                          color:
-                                              transaction.isAdmission ?? false
-                                                  ? CupertinoColors.activeGreen
-                                                  : CupertinoColors.systemRed,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        transaction.date,
-                                        textAlign: TextAlign.right,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
+                            return TransactionWidget(transaction: transaction);
                           },
                         ),
                       if (isSelectedAllWallets

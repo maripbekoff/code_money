@@ -9,6 +9,7 @@ import 'package:code_money/src/screens/add_transaction/cubit/add_transaction_cub
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:hive/hive.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({
@@ -36,11 +37,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   List<DirectionModel> directions = getIt<List<DirectionModel>>();
 
   final DateTime dateTimeNow = DateTime.now();
+  final Box transactionsBox = Hive.box('transactions');
 
   @override
   void initState() {
     dateController.text =
         '${dateTimeNow.day}.${dateTimeNow.month}.${dateTimeNow.year}';
+    walletController.text = transactionsBox.get('wallet') ?? '';
+    directionController.text = transactionsBox.get('direction') ?? '';
     super.initState();
   }
 
@@ -228,12 +232,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           bool isValid =
                               Form.of(primaryFocus!.context!)?.validate() ??
                                   false;
+
                           if (isValid) {
                             TransactionModel transaction = TransactionModel(
                               month: null,
                               monthNum: null,
                               date: dateController.text,
-                              sum: int.tryParse(sumController.text) ?? 0,
+                              sum: double.tryParse(
+                                      sumController.text.replaceAll(',', '')) ??
+                                  0,
                               wallet: walletController.text,
                               direction: directionController.text,
                               counterAgent: counterAgentController.text,

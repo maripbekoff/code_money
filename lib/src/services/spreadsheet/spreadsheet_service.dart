@@ -114,7 +114,7 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
               month: e[0],
               monthNum: e[1],
               date: e[2],
-              sum: e[3],
+              sum: e[3].toDouble(),
               wallet: e[4],
               direction: e[5],
               counterAgent: e[6],

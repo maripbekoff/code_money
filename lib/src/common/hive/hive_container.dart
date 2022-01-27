@@ -8,4 +8,5 @@ Future initHive() async {
 
   await Hive.openBox('tokens');
   await Hive.openBox('user');
+  await Hive.openBox('transactions');
 }

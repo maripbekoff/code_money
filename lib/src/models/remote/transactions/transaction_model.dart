@@ -7,7 +7,7 @@ class TransactionModel {
   final String? month;
   final int? monthNum;
   final String date;
-  final int sum;
+  final double sum;
   final String wallet;
   final String direction;
   final String counterAgent;
