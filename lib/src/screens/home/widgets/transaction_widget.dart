@@ -5,49 +5,83 @@ class TransactionWidget extends StatelessWidget {
   const TransactionWidget({
     Key? key,
     required this.transaction,
+    required this.onDissmissed,
   }) : super(key: key);
 
   final TransactionModel transaction;
+  final Function(DismissDirection direction) onDissmissed;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6,
-        borderRadius: BorderRadius.circular(8),
+    return Dismissible(
+      key: ValueKey(transaction.hashCode),
+      background: Container(
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemRed,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(
+          CupertinoIcons.trash,
+          color: CupertinoColors.white,
+        ),
       ),
-      child: Row(
-        children: [
-          Text(
-            transaction.wallet,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+      secondaryBackground: Container(
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemGrey,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(
+          CupertinoIcons.pencil,
+          color: CupertinoColors.white,
+        ),
+      ),
+      onDismissed: onDissmissed,
+      confirmDismiss: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          return Future.value(false);
+        } else {
+          return Future.value(true);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemGrey6,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Text(
+              transaction.wallet,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              Text(
-                '${transaction.isAdmission ?? false ? '+' : '-'} ${transaction.sum.abs()} ₸',
-                style: TextStyle(
-                  color: transaction.isAdmission ?? false
-                      ? CupertinoColors.activeGreen
-                      : CupertinoColors.systemRed,
+            const Spacer(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${transaction.isAdmission ?? false ? '+' : '-'} ${transaction.sum.abs()} ₸',
+                  style: TextStyle(
+                    color: transaction.isAdmission ?? false
+                        ? CupertinoColors.activeGreen
+                        : CupertinoColors.systemRed,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                transaction.date,
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontSize: 12,
+                const SizedBox(height: 2),
+                Text(
+                  dateFromDateTimeToString(transaction.date),
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 12,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

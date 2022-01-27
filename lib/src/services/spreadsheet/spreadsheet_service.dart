@@ -113,7 +113,7 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
             (e) => TransactionModel(
               month: e[0],
               monthNum: e[1],
-              date: e[2],
+              date: dateFromStringToDateTime(e[2]),
               sum: e[3].toDouble(),
               wallet: e[4],
               direction: e[5],
@@ -146,7 +146,7 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
             [
               null,
               null,
-              transaction.date,
+              dateFromDateTimeToString(transaction.date),
               transaction.sum,
               transaction.wallet,
               transaction.direction,

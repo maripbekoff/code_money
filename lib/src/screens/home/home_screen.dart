@@ -139,7 +139,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               transaction = transactionsFiltered[index];
                             }
 
-                            return TransactionWidget(transaction: transaction);
+                            return TransactionWidget(
+                              transaction: transaction,
+                              onDissmissed: (direction) {
+                                if (direction == DismissDirection.startToEnd) {
+                                  if (isSelectedAllWallets) {
+                                    setState(() {
+                                      state.transactions.remove(transaction);
+                                    });
+                                  } else {
+                                    setState(() {
+                                      transactionsFiltered.remove(transaction);
+                                    });
+                                  }
+                                }
+                              },
+                            );
                           },
                         ),
                       if (isSelectedAllWallets

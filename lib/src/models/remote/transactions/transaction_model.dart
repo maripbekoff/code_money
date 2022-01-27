@@ -6,7 +6,11 @@ part 'transaction_model.g.dart';
 class TransactionModel {
   final String? month;
   final int? monthNum;
-  final String date;
+  @JsonKey(
+    fromJson: dateFromStringToDateTime,
+    toJson: dateFromDateTimeToString,
+  )
+  final DateTime date;
   final double sum;
   final String wallet;
   final String direction;
@@ -34,3 +38,16 @@ class TransactionModel {
       _$TransactionModelFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 }
+
+DateTime dateFromStringToDateTime(String date) {
+  final List dateList = date.split('.').map((e) => int.parse(e)).toList();
+
+  return DateTime(
+    dateList.last,
+    dateList[1],
+    dateList.first,
+  );
+}
+
+String dateFromDateTimeToString(DateTime date) =>
+    '${date.day}.${date.month}.${date.year}';

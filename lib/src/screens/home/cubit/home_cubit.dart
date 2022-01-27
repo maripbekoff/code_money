@@ -41,6 +41,14 @@ class HomeCubit extends Cubit<HomeState> {
         );
       }
 
+      transactions.sort((d1, d2) {
+        if (d1.date.isAfter(d2.date)) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+
       emit(HomeLoaded(
         totalBalance: totalBalance,
         balances: balances,

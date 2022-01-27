@@ -10,7 +10,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
     TransactionModel(
       month: json['month'] as String?,
       monthNum: json['monthNum'] as int?,
-      date: json['date'] as String,
+      date: dateFromStringToDateTime(json['date'] as String),
       sum: (json['sum'] as num).toDouble(),
       wallet: json['wallet'] as String,
       direction: json['direction'] as String,
@@ -25,7 +25,7 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
     <String, dynamic>{
       'month': instance.month,
       'monthNum': instance.monthNum,
-      'date': instance.date,
+      'date': dateFromDateTimeToString(instance.date),
       'sum': instance.sum,
       'wallet': instance.wallet,
       'direction': instance.direction,

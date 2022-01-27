@@ -237,7 +237,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             TransactionModel transaction = TransactionModel(
                               month: null,
                               monthNum: null,
-                              date: dateController.text,
+                              date:
+                                  dateFromStringToDateTime(dateController.text),
                               sum: double.tryParse(
                                       sumController.text.replaceAll(',', '')) ??
                                   0,
