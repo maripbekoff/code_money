@@ -1,8 +1,10 @@
+import 'package:code_money/src/common/dependencies/injection_container.dart';
 import 'package:code_money/src/models/local/router/add_transaction_screen_args.dart';
 import 'package:code_money/src/models/remote/balance/balance_model.dart';
 import 'package:code_money/src/models/remote/transactions/transaction_model.dart';
 import 'package:code_money/src/router/routing_const.dart';
 import 'package:code_money/src/screens/home/cubit/home_cubit.dart';
+import 'package:code_money/src/services/spreadsheet/spreadsheet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             return TransactionWidget(
                               transaction: transaction,
-                              onDissmissed: (direction) {
+                              onDissmissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   if (isSelectedAllWallets) {
                                     setState(() {
@@ -152,6 +154,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       transactionsFiltered.remove(transaction);
                                     });
                                   }
+                                  await getIt<SpreadsheetService>()
+                                      .deleteTransaction(
+                                    rowId: transaction.id!.rowId,
+                                  );
                                 }
                               },
                             );

@@ -4,6 +4,7 @@ import 'package:code_money/src/models/remote/articles/article_model.dart';
 import 'package:code_money/src/models/remote/balance/balance_model.dart';
 import 'package:code_money/src/models/remote/directions/direction_model.dart';
 import 'package:code_money/src/models/remote/sheets/spreadsheet_model.dart';
+import 'package:code_money/src/models/remote/transactions/transaction_id_model.dart';
 import 'package:code_money/src/models/remote/transactions/transaction_model.dart';
 import 'package:dio/dio.dart';
 
@@ -15,6 +16,7 @@ abstract class SpreadsheetService {
   Future<List<ArticleModel>> getArticles();
   Future<List<TransactionModel>> getTransactions();
   Future<void> createTransaction({required TransactionModel transaction});
+  Future<void> deleteTransaction({required String rowId});
 }
 
 class SpreadsheetServiceImpl implements SpreadsheetService {
@@ -108,23 +110,39 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
         },
       );
 
-      return (res.data['values'] as List)
-          .map(
-            (e) => TransactionModel(
-              month: e[0],
-              monthNum: e[1],
-              date: dateFromStringToDateTime(e[2]),
-              sum: e[3].toDouble(),
-              wallet: e[4],
-              direction: e[5],
-              counterAgent: e[6],
-              appointment: e[7],
-              article: e[8],
-              isAdmission: e[9] == 'Поступление',
-              kindOfActivity: e[10],
-            ),
-          )
-          .toList();
+      int i = 5;
+
+      List<TransactionModel> list = [];
+
+      for (final e in res.data['values'] as List) {
+        if (e.isEmpty) {
+          i++;
+          continue;
+        }
+        list.add(TransactionModel(
+          id: TransactionIdModel(
+            id: 'A$i:K$i',
+            rowId: '$i',
+            columnId: '$i',
+            firstColumnLetterId: 'A',
+            secondColumnLetterId: 'K',
+          ),
+          month: e[0],
+          monthNum: e[1],
+          date: dateFromStringToDateTime(e[2]),
+          sum: e[3].toDouble(),
+          wallet: e[4],
+          direction: e[5],
+          counterAgent: e[6],
+          appointment: e[7],
+          article: e[8],
+          isAdmission: e[9] == 'Поступление',
+          kindOfActivity: e[10],
+        ));
+        i++;
+      }
+
+      return list;
     } on DioError {
       rethrow;
     } catch (e) {
@@ -209,6 +227,22 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
       }
 
       return list;
+    } on DioError {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteTransaction({required String rowId}) async {
+    try {
+      await dio.post(
+        EnvironmentConfig.spreadsheetId + '/values:batchClear',
+        data: {
+          "ranges": ["C$rowId:I$rowId"],
+        },
+      );
     } on DioError {
       rethrow;
     } catch (e) {

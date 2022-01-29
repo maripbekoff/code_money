@@ -1,9 +1,11 @@
+import 'package:code_money/src/models/remote/transactions/transaction_id_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'transaction_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TransactionModel {
+  final TransactionIdModel? id;
   final String? month;
   final int? monthNum;
   @JsonKey(
@@ -21,6 +23,7 @@ class TransactionModel {
   final String? kindOfActivity;
 
   TransactionModel({
+    required this.id,
     required this.month,
     required this.monthNum,
     required this.date,

@@ -235,6 +235,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
                           if (isValid) {
                             TransactionModel transaction = TransactionModel(
+                              id: null,
                               month: null,
                               monthNum: null,
                               date:
