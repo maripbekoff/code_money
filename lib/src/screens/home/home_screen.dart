@@ -27,6 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late BalanceModel selectedBalance;
   late List<BalanceModel> filterBalances = [];
+  final List filterTags = [
+    7,
+    14,
+    30,
+    365,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +125,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: 42,
+                        child: ListView.separated(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: filterTags.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 20),
+                          itemBuilder: (context, index) {
+                            return CupertinoButton(
+                              color: CupertinoColors.black.withOpacity(.8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              minSize: 0,
+                              child: index == 3
+                                  ? const Text('Год')
+                                  : Text('${filterTags[index]} дней'),
+                              onPressed: () {
+                                context
+                                    .read<HomeCubit>()
+                                    .filter(filterTags[index]);
+                              },
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 12),

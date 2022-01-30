@@ -104,6 +104,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   readOnly: true,
                   keyboardType: TextInputType.datetime,
                   onTap: () {
+                    DateTime now = DateTime.now();
+
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) => Container(
@@ -113,8 +115,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         height: MediaQuery.of(context).size.height / 2,
                         child: CupertinoDatePicker(
                           mode: CupertinoDatePickerMode.date,
-                          maximumDate:
-                              DateTime.now().add(const Duration(days: 365)),
+                          maximumDate: DateTime(
+                            now.year,
+                            now.month,
+                            now.day + 1,
+                          ),
                           minimumDate: DateTime.now().subtract(
                             const Duration(days: 1095),
                           ),
@@ -261,7 +266,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           if (isValid) {
                             TransactionModel transaction = TransactionModel(
                               id: widget.type == AddTransactionScreenType.def
-                                  ? null 
+                                  ? null
                                   : widget.transaction!.id,
                               month: null,
                               monthNum: null,

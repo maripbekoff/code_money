@@ -17,17 +17,21 @@ class HomeCubit extends Cubit<HomeState> {
     required this.spreadsheetService,
   }) : super(HomeInitial());
 
+  late BalanceModel totalBalance;
+  List<BalanceModel> balances = [];
+  List<TransactionModel> transactions = [];
+  List<ArticleModel> articles = [];
+  List<DirectionModel> directions = [];
+
   void init() async {
     emit(HomeLoading());
 
     try {
-      BalanceModel totalBalance = await spreadsheetService.getTotalBalance();
-      List<BalanceModel> balances = await spreadsheetService.getBalances();
-      List<TransactionModel> transactions =
-          await spreadsheetService.getTransactions();
-      List<ArticleModel> articles = await spreadsheetService.getArticles();
-      List<DirectionModel> directions =
-          await spreadsheetService.getDirections();
+      totalBalance = await spreadsheetService.getTotalBalance();
+      balances = await spreadsheetService.getBalances();
+      transactions = await spreadsheetService.getTransactions();
+      articles = await spreadsheetService.getArticles();
+      directions = await spreadsheetService.getDirections();
 
       if (!getIt.isRegistered<List<BalanceModel>>()) {
         getIt.registerLazySingleton<List<BalanceModel>>(
@@ -65,5 +69,31 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeFailed());
       rethrow;
     }
+  }
+
+  filter(int days) {
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime selectedDay = today.subtract(Duration(days: days));
+
+    List<TransactionModel> filteredTransactions = transactions
+        .where(
+          (t) => t.date.isAfter(selectedDay) && t.date.isBefore(today),
+        )
+        .toList();
+
+    // filteredTransactions.sort((d1, d2) {
+    //   if (d1.date.isAfter(d2.date)) {
+    //     return 1;
+    //   } else {
+    //     return -1;
+    //   }
+    // });
+
+    emit(HomeLoaded(
+      totalBalance: totalBalance,
+      balances: balances,
+      transactions: filteredTransactions.reversed.toList(),
+    ));
   }
 }
