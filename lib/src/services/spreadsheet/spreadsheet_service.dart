@@ -17,6 +17,7 @@ abstract class SpreadsheetService {
   Future<List<TransactionModel>> getTransactions();
   Future<void> createTransaction({required TransactionModel transaction});
   Future<void> deleteTransaction({required String rowId});
+  Future<void> editTransaction({required TransactionModel transaction});
 }
 
 class SpreadsheetServiceImpl implements SpreadsheetService {
@@ -109,6 +110,10 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
           'dateTimeRenderOption': 'FORMATTED_STRING',
         },
       );
+
+      if (res.data['values'] == null) {
+        return [];
+      }
 
       int i = 5;
 
@@ -244,6 +249,40 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
         },
       );
     } on DioError {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> editTransaction({required TransactionModel transaction}) async {
+    try {
+      await dio.post(
+        EnvironmentConfig.spreadsheetId + '/values:batchUpdate',
+        data: {
+          "valueInputOption": "USER_ENTERED",
+          "data": [
+            {
+              "range": "C${transaction.id!.rowId}:I${transaction.id!.rowId}",
+              "majorDimension": "ROWS",
+              "values": [
+                [
+                  dateFromDateTimeToString(transaction.date),
+                  transaction.sum,
+                  transaction.wallet,
+                  transaction.direction,
+                  transaction.counterAgent,
+                  transaction.appointment,
+                  transaction.article,
+                ]
+              ],
+            },
+          ],
+          "includeValuesInResponse": false,
+        },
+      );
+    } on DioError catch (e) {
       rethrow;
     } catch (e) {
       rethrow;

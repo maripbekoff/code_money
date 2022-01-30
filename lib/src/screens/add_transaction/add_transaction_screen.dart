@@ -1,6 +1,7 @@
 import 'package:code_money/src/common/dependencies/injection_container.dart';
 import 'package:code_money/src/common/widgets/app_text_field.dart';
 import 'package:code_money/src/common/widgets/modals/picker_with_search_field.dart';
+import 'package:code_money/src/enums/add_transaction_screen_type.dart';
 import 'package:code_money/src/models/remote/articles/article_model.dart';
 import 'package:code_money/src/models/remote/balance/balance_model.dart';
 import 'package:code_money/src/models/remote/directions/direction_model.dart';
@@ -15,9 +16,22 @@ class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({
     Key? key,
     required this.onCreated,
-  }) : super(key: key);
+  })  : type = AddTransactionScreenType.def,
+        transaction = null,
+        super(key: key);
+
+  const AddTransactionScreen.edit({
+    Key? key,
+    required this.onCreated,
+    required this.transaction,
+  })  : type = AddTransactionScreenType.edit,
+        super(key: key);
 
   final VoidCallback onCreated;
+
+  final TransactionModel? transaction;
+
+  final AddTransactionScreenType type;
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -41,10 +55,21 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   void initState() {
-    dateController.text =
-        '${dateTimeNow.day}.${dateTimeNow.month}.${dateTimeNow.year}';
-    walletController.text = transactionsBox.get('wallet') ?? '';
-    directionController.text = transactionsBox.get('direction') ?? '';
+    if (widget.type == AddTransactionScreenType.def) {
+      dateController.text =
+          '${dateTimeNow.day}.${dateTimeNow.month}.${dateTimeNow.year}';
+      walletController.text = transactionsBox.get('wallet') ?? '';
+      directionController.text = transactionsBox.get('direction') ?? '';
+    } else if (widget.type == AddTransactionScreenType.edit) {
+      TransactionModel transaction = widget.transaction!;
+      dateController.text = dateFromDateTimeToString(transaction.date);
+      sumController.text = transaction.sum.toString();
+      walletController.text = transaction.wallet;
+      directionController.text = transaction.direction;
+      counterAgentController.text = transaction.counterAgent;
+      appointmentController.text = transaction.appointment;
+      articleController.text = transaction.article;
+    }
     super.initState();
   }
 
@@ -235,7 +260,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
                           if (isValid) {
                             TransactionModel transaction = TransactionModel(
-                              id: null,
+                              id: widget.type == AddTransactionScreenType.def
+                                  ? null 
+                                  : widget.transaction!.id,
                               month: null,
                               monthNum: null,
                               date:
@@ -251,9 +278,17 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               isAdmission: null,
                               kindOfActivity: null,
                             );
-                            context
-                                .read<AddTransactionCubit>()
-                                .addTransaction(transaction: transaction);
+
+                            if (widget.type == AddTransactionScreenType.def) {
+                              context
+                                  .read<AddTransactionCubit>()
+                                  .addTransaction(transaction: transaction);
+                            } else if (widget.type ==
+                                AddTransactionScreenType.edit) {
+                              context
+                                  .read<AddTransactionCubit>()
+                                  .editTransaction(transaction: transaction);
+                            }
                           }
                         },
                 );

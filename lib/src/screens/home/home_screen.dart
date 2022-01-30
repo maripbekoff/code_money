@@ -160,6 +160,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 }
                               },
+                              confirmDismiss: (direction) {
+                                if (direction == DismissDirection.endToStart) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    RoutingConst.addTransactionRoute,
+                                    arguments: AddTransactionScreenArgs.edit(
+                                      onCreated: () =>
+                                          context.read<HomeCubit>().init(),
+                                      transaction: transaction,
+                                    ),
+                                  );
+                                  return Future.value(false);
+                                } else {
+                                  return Future.value(true);
+                                }
+                              },
                             );
                           },
                         ),

@@ -27,4 +27,18 @@ class AddTransactionCubit extends Cubit<AddTransactionState> {
       rethrow;
     }
   }
+
+  editTransaction({required TransactionModel transaction}) async {
+    emit(AddTransactionLoading());
+
+    try {
+      await spreadsheetService.editTransaction(transaction: transaction);
+      await transactionsBox.put('wallet', transaction.wallet);
+      await transactionsBox.put('direction', transaction.direction);
+      emit(AddTransactionLoaded());
+    } catch (e) {
+      emit(AddTransactionFailed());
+      rethrow;
+    }
+  }
 }

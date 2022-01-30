@@ -48,9 +48,14 @@ class AppRouter {
             create: (context) => AddTransactionCubit(
               spreadsheetService: getIt(),
             ),
-            child: AddTransactionScreen(
-              onCreated: args.onCreated,
-            ),
+            child: args.transaction == null
+                ? AddTransactionScreen(
+                    onCreated: args.onCreated,
+                  )
+                : AddTransactionScreen.edit(
+                    onCreated: args.onCreated,
+                    transaction: args.transaction,
+                  ),
           ),
         );
       case RoutingConst.forceUpdateRoute:

@@ -6,10 +6,12 @@ class TransactionWidget extends StatelessWidget {
     Key? key,
     required this.transaction,
     required this.onDissmissed,
+    required this.confirmDismiss,
   }) : super(key: key);
 
   final TransactionModel transaction;
   final Function(DismissDirection direction) onDissmissed;
+  final Future<bool> Function(DismissDirection direction) confirmDismiss;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +38,7 @@ class TransactionWidget extends StatelessWidget {
         ),
       ),
       onDismissed: onDissmissed,
-      confirmDismiss: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          return Future.value(false);
-        } else {
-          return Future.value(true);
-        }
-      },
+      confirmDismiss: confirmDismiss,
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
