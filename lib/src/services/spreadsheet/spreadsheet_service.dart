@@ -282,7 +282,7 @@ class SpreadsheetServiceImpl implements SpreadsheetService {
           "includeValuesInResponse": false,
         },
       );
-    } on DioError catch (e) {
+    } on DioError {
       rethrow;
     } catch (e) {
       rethrow;
